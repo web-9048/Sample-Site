@@ -1,0 +1,236 @@
+<%- include("partials/header")%>
+<script src="https://js.stripe.com/v3/"></script>
+
+<div class="ui container main segment">
+  <h2 class="ui header">Cart</h2>
+  <div class="ui divided items">
+    <%if(products.length>=0){%> <% products.forEach(function(product){%>
+    <div class="item cart" id="<%=product._id%>">
+      <div class="image">
+        <img src="<%=product.image%>" />
+      </div>
+      <div class="content">
+        <a style="width: 100%" class="header" href="/products/<%=product._id%>"
+          ><%=product.title%>
+          <span style="float: right">$<%=product.price%></span>
+        </a>
+        <div class="ui sub header">In STOCK</div>
+        <div class="description">
+          <p><%=product.body.substr(0, 200)%>...</p>
+          <div class="ui checkbox" name="<%=product._id%>">
+            <input class="ui checkbox" type="checkbox" tabindex="0" />
+            <label>Select for Purchase</label>
+          </div>
+          <select
+            id="first"
+            name="Quantity<%=product._id%>"
+            value="<%=product.quantity%>"
+            style="padding: 0"
+            class="ui selection compact dropdown"
+          >
+            <option name="<%=product._id%>" value="<%=product.quantity%>">
+              Qty: <%=product.quantity%>
+            </option>
+            <%for(var i = 1; i<11; i++){%> <%if(i!== product.quantity){%>
+            <option value="<%=i%>">Qty: <%=i%></option>
+
+            <%}%> <%}%>
+          </select>
+
+          <a
+            href="products/<%=product._id%>/buy"
+            class="blue inverted ui button"
+          >
+            <i class="dollar sign icon"></i> Buy Now
+          </a>
+          <button
+            id="delete"
+            name="<%=product._id%>"
+            class="red inverted ui button"
+          >
+            <i class="trash icon"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <%})%>
+  </div>
+
+  <%}%>
+  <div>
+    <%if(products.length < 1){%>
+    <h3 class="header ui padded">
+      Your cart is empty, <a href="/products">add some items!!</a>
+    </h3>
+    <%}%>
+  </div>
+  <h3 class="header hidden ui padded">
+    Your cart is empty, <a href="/products">add some items!!</a>
+  </h3>
+  <hr />
+  <h3 class="header ui">
+    <button id="checkout-button" class="ui large button blue inverted">
+      <i class="ui icon shopping cart"></i> Checkout
+    </button>
+    <span class="right" id="sub" style="vertical-align: middle">
+      Subtotal <span id="subtotal"></span> (<span id="numOfProd"></span>)
+    </span>
+  </h3>
+</div>
+<span id="variableJSON" hidden> <%= JSON.stringify(products) %> </span>
+<span id="variableJSON2" hidden> <%= JSON.stringify(productsOG) %> </span>
+
+<script>
+  let box = $(".ui.checkbox");
+  box.checkbox("set checked");
+  var products = JSON.parse($("#variableJSON").text());
+  $("#variableJSON").remove();
+  products.map((x) => {
+    let quantity = Number($("#first[name =Quantity" + x._id + "]").val());
+    x.quantity = quantity;
+  });
+  var productsOG = JSON.parse($("#variableJSON2").text());
+  $("#variableJSON2").remove();
+  let checkedProducts = [];
+  let totalPrice = 0;
+  let productNum = 0;
+  let updatedProd = [];
+  function check(fetch) {
+    checkedProducts = [];
+    totalPrice = 0;
+    productNum = 0;
+    updatedProd = [];
+    products.forEach(function (p) {
+      let checkbox = $(".ui.checkbox[name =" + p._id + "]");
+      let quantity = Number($("#first[name =Quantity" + p._id + "]").val());
+
+      if (fetch) {
+        updatedProd.push({
+          quantity: quantity,
+          id: p._id,
+          _id: p.id,
+        });
+        console.log(
+          JSON.stringify({
+            products: updatedProd,
+          })
+        );
+        console.log(updatedProd);
+        if (updatedProd.length === productsOG.length) {
+          var settings = {
+            url: "/cart/update",
+            method: "POST",
+            timeout: 0,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            data: {
+              products: JSON.stringify(updatedProd),
+            },
+          };
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+          });
+        }
+      }
+      if (checkbox.checkbox("is checked")) {
+        totalPrice += p.price * quantity;
+        productNum += quantity;
+        checkedProducts.push(p);
+      }
+    });
+    document.querySelector("#numOfProd").innerText = productNum;
+    document.querySelector("#subtotal").innerText = "$" + totalPrice;
+    console.log(checkedProducts);
+  }
+  document.querySelectorAll(".ui.checkbox").forEach(function (c) {
+    c.addEventListener("click", () => {
+      check(false);
+    });
+  });
+  document.querySelectorAll("#first").forEach(function (c) {
+    c.addEventListener("change", () => {
+      products.map((x) => {
+        let quantity = Number($("#first[name =Quantity" + x._id + "]").val());
+        x.quantity = quantity;
+      });
+      check(true);
+    });
+  });
+  document.querySelectorAll("#delete").forEach(function (c) {
+    c.addEventListener("click", () => {
+      var settings = {
+        url: "/cart/" + c.name + "/delete",
+        method: "POST",
+        timeout: 0,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: {},
+      };
+      $.ajax(settings).done(function (response) {
+        console.log(response);
+      });
+      document.querySelectorAll(".item.cart").forEach(function (item) {
+        if (item.id === c.name) {
+          item.remove();
+          products.forEach(function (p) {
+            console.log(p._id);
+            console.log(item.id);
+            if (p._id === item.id) {
+              console.log("()");
+              products.splice(products.indexOf(p), 1);
+            }
+          });
+          if ($(".item.cart").length === 0) {
+            $("#sub").remove();
+
+            $(".hidden").removeClass("hidden");
+          }
+        }
+      });
+      check(false);
+    });
+  });
+
+  window.onload(check(false));
+</script>
+<script type="text/javascript">
+  // Create an instance of the Stripe object with your publishable API key
+  var stripe = Stripe(
+    "pk_test_51I4FBXK6TknWrvo2sZ9APKIViiTkKjxdqUVTycQaH7cpisdXHAJmrHEKbRFxKzVpDA3rytQMpT0zukRVSL5Cxywl00anJR5fzW"
+  );
+  var checkoutButton = document.getElementById("checkout-button");
+  console.log(checkoutButton);
+  checkoutButton.addEventListener("click", function () {
+    // Create a new Checkout Session using the server-side endpoint you
+    // created in step 3.
+    var settings = {
+      url: "/order",
+      method: "POST",
+      timeout: 0,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: {
+        products: JSON.stringify(checkedProducts),
+      },
+    };
+    $.ajax(settings)
+      .done(function (response) {
+        return response.json();
+      })
+      .then(function (session) {
+        return stripe.redirectToCheckout({ sessionId: session.id });
+      })
+      .then(function (result) {
+        if (result.error) {
+          alert(result.error.message);
+        }
+      })
+      .catch(function (error) {
+        console.error("Error:", error);
+      });
+  });
+</script>
+<%- include("partials/footer")%>

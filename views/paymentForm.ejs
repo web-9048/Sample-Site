@@ -1,0 +1,217 @@
+<%- include("partials/header")%>
+
+<div class="ui main container grid stackable">
+    <div class="ui ten wide column">
+        <div class="ui segment">
+            <div class="ui large header">Checkout Form</div>
+
+            <form class="ui form" method="POST" action="/charge">
+                <h4 class="ui dividing header">Shipping Information</h4>
+                <div class="field">
+                    <label>Name</label>
+                    <div class="two fields">
+                        <div class="field">
+                            <input
+                                required
+                                type="text"
+                                name="firstName"
+                                placeholder="First Name"
+                                value="<%=currentUser.firstName%>"
+                            />
+                        </div>
+                        <div class="field">
+                            <input
+                                required
+                                type="text"
+                                name="lastName"
+                                placeholder="Last Name"
+                                value="<%=currentUser.lastName%>"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="">Email</label>
+                    <input type="email" name="email" placeholder="email" value="<%=currentUser.username%>" />
+                </div>
+
+                <div class="fields">
+                    <div class="twelve wide field">
+                        <label>Billing Address</label>
+
+                        <input
+                            type="text"
+                            name="address"
+                            placeholder="Street Address"
+                            onkeyup="return autoCompleteListener(this, event)"
+                            id="auto-complete"
+                            type="text"
+                            class="search"
+                            name="address"
+                            value="<%=currentUser.address.streetAddress%>"
+                            required
+                        />
+                        <div id="auto"></div>
+                    </div>
+                    <div class="four wide field">
+                        <label>Apt Num</label>
+
+                        <input
+                            type="text"
+                            name="apt"
+                            placeholder="Apt #"
+                            value="<%=currentUser.address.apartmentNum%>"
+                        />
+                    </div>
+                </div>
+                <!-- </div> -->
+                <div class="fields">
+                    <div class="six wide field">
+                        <label>State</label>
+                        <input
+                            required
+                            placeholder="State"
+                            type="text"
+                            name="state"
+                            value="<%=currentUser.address.state%>"
+                        />
+                    </div>
+                    <div class="six wide field">
+                        <label>Country</label>
+                        <div class="ui fluid search selection dropdown">
+                            <input required type="hidden" name="country" />
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Select Country</div>
+                            <div class="menu">
+                                <div class="item" data-value="CAN"><i class="ca flag"></i>Canada</div>
+
+                                <div class="item" data-value="GBR"><i class="gb flag"></i>England</div>
+
+                                <div class="item" data-value="mx"><i class="mx flag"></i>Mexico</div>
+
+                                <div class="item" data-value="USA"><i class="us flag"></i>United States</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="four wide field">
+                        <label>Postal Code</label>
+                        <input
+                            required
+                            placeholder="ZIP Code"
+                            type="text"
+                            name="postalCode"
+                            value="<%=currentUser.address.postalCode%>"
+                        />
+                    </div>
+                </div>
+                <h4 class="ui dividing header">Billing Information</h4>
+                <div class="field">
+                    <label for="">Name on Card</label>
+                    <input type="text" name="nameCard" id="" placeholder="Name on card" />
+                </div>
+                <div class="field">
+                    <label for="">Card Details</label>
+
+                    <!-- placeholder for Elements -->
+                    <div id="card-element"></div>
+
+                    <div style="width: 1000px" id="card-errors" role="alert"></div>
+                </div>
+
+                <button class="ui inverted blue button" data-secret="<%=client_secret%>" id="card-button">
+                    Submit Payment
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="ui six wide column">
+        <div class="ui segment">
+            <div class="ui header">Order Details</div>
+            <%products.forEach(function(prod){%>
+            <div class="ui unstackable items">
+                <div class="item">
+                    <div class="ui tiny rounded image">
+                        <img src="<%=prod.id.image.url%>" />
+                    </div>
+                    <div class="middle aligned content">
+                        <h4 class="ui mini header" style="width: 100%"><%=prod.id.title%></h4>
+                        <h5 class="ui mini header" style="width: 100%">
+                            Price:
+                            <span style="float: right; color: grey">$<%=prod.id.price%></span>
+                        </h5>
+                        <h5 class="ui mini header" style="width: 100%">
+                            Qty:
+                            <span style="float: right; color: grey"><%=prod.quantity%></span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+        </div>
+    </div>
+</div>
+<span id="variableJSON" hidden> <%= JSON.stringify(products) %> </span>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    var products = JSON.parse($('#variableJSON').text());
+    $('#variableJSON').remove();
+    $('.ui.dropdown').dropdown();
+    const stripe = Stripe(
+        'pk_test_51I4FBXK6TknWrvo2sZ9APKIViiTkKjxdqUVTycQaH7cpisdXHAJmrHEKbRFxKzVpDA3rytQMpT0zukRVSL5Cxywl00anJR5fzW',
+    ); // Your Publishable Key
+    const elements = stripe.elements();
+
+    // Create our card inputs
+    var style = {
+        base: {
+            lineHeight: '1.35',
+            fontSize: '1.11rem',
+            color: '#495057',
+            fontFamily: 'apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif',
+        },
+    };
+
+    const card = elements.create('card', style);
+    card.mount('#card-element', style);
+
+    const form = document.querySelector('form');
+    const errorEl = document.querySelector('#card-errors');
+
+    // Give our token to our form
+    const stripeTokenHandler = (token) => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+        const hiddenInput2 = document.createElement('input');
+        hiddenInput2.setAttribute('type', 'hidden');
+        hiddenInput2.setAttribute('name', 'clientSecret');
+        hiddenInput2.setAttribute('value', '<%=client_secret%>');
+        form.appendChild(hiddenInput2);
+        const hiddenInput3 = document.createElement('input');
+        hiddenInput3.setAttribute('type', 'hidden');
+        hiddenInput3.setAttribute('name', 'products');
+        hiddenInput3.setAttribute('value', JSON.stringify(products));
+        form.appendChild(hiddenInput3);
+        form.submit();
+    };
+
+    // Create token from card data
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        stripe.createToken(card).then((res) => {
+            if (res.error) {
+                console.log(res.error.message);
+                errorEl.textContent = res.error.message;
+            } else {
+                stripeTokenHandler(res.token);
+            }
+        });
+    });
+</script>
+<script src="form.js"></script>
+<%- include("partials/footer")%>

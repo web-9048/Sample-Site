@@ -1,27 +1,21 @@
 <%- include("partials/header")%>
 <div class="ui main text container segment">
-  <div class="ui huge header">Edit <%= product.title%></div>
-  <form
-    action="/products/<%=product._id%>?_method=PUT"
-    class="ui form"
-    method="POST"
-  >
-    <div class="field">
-      <label>Title</label>
-      <input type="text" name="title" required value="<%= product.title%>" />
-    </div>
-    <div class="field">
-      <label>Image Url</label>
-      <input type="text" name="image" required value="<%= product.image%>" />
-    </div>
-    <div class="field">
-      <label>Product Content</label>
-      <textarea name="body" id="" cols="30" required rows="10">
-<%= product.body%></textarea
-      >
-    </div>
-    <button class="ui inverted blue button inline">Submit!</button>
-  </form>
+    <div class="ui huge header">Edit <%= product.title%></div>
+    <form action="/products/<%=product._id%>?_method=PUT" class="ui form" method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <label>Title</label>
+            <input type="text" name="title" required value="<%= product.title%>" />
+        </div>
+        <div class="field">
+            <label>Image </label>
+            <input type="file" id="image" name="image" accept="image/*" />
+        </div>
+        <div class="field">
+            <label>Product Content</label>
+            <textarea name="body" id="" cols="30" required rows="10"><%= product.body%></textarea>
+        </div>
+        <button class="ui inverted blue button inline">Submit!</button>
+    </form>
 </div>
 
 <%- include("partials/footer")%>

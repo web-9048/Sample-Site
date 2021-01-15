@@ -14,6 +14,18 @@ var orderSchema = new mongoose.Schema({
     },
   ],
   totalPrice: Number,
+  arrivalTime: String,
+  shippingAddress: {
+    postalCode: String,
+    streetAddress: String,
+    country: String,
+    apartmentNum: String,
+    state: String,
+  },
+
+  chargeId: String,
+  delivered: { type: Boolean, default: false },
+
   created: { type: Date, default: Date.now },
 });
 var Order = mongoose.model("Order", orderSchema);

@@ -1,108 +1,131 @@
 <%- include("partials/header")%>
+<script src="https://js.stripe.com/v3/"></script>
+
 <div class="ui main container">
-  <div class="stackable ui grid">
-    <div class="ui segment ten wide column" id="mainSeg">
-      <div class="ui huge header"><%=product.title %></div>
-      <div class="ui top attached">
-        <div class="ui header">
-          <h4 class="color123">Submitted by <%= product.author.username%></h4>
-        </div>
-        <div class="image">
-          <img class="ui centered rounded image" src="<%=product.image%>" />
-        </div>
+    <div class="stackable ui grid">
+        <div class="ui segment ten wide column" id="mainSeg">
+            <div class="ui huge header"><%=product.title %></div>
+            <div class="ui top attached">
+                <div class="ui header">
+                    <h4 class="color123">Submitted by <%= product.author.username%></h4>
+                </div>
+                <div class="image">
+                    <img class="ui centered rounded image" src="<%=product.image.url%>" />
+                </div>
 
-        <div class="content">
-          <div class="meta color123">
-            <p>Description</p>
-          </div>
-          <div class="description">
-            <p><%-product.body%></p>
-          </div>
-        </div>
+                <div class="content">
+                    <div class="meta color123">
+                        <p>Description</p>
+                    </div>
+                    <div class="description">
+                        <p><%-product.body%></p>
+                    </div>
+                </div>
 
-        <%if(!currentUser){%> <%}else{%> <%if(currentUser.isAdmin){%>
-        <div class="item">
-          <a href="/products" class="button inverted primary ui">Go Back</a>
-          <a
-            href="/products/<%=product._id%>/edit"
-            class="ui inverted yellow button"
-            >Edit</a
-          >
-          <form
-            action="/products/<%=product._id%>?_method=DELETE"
-            style="display: inline"
-            class=""
-            method="POST"
-          >
-            <button class="ui inverted red button">Delete</button>
-          </form>
-        </div>
-        <%}%> <%}%>
-      </div>
-    </div>
-    <div class="ui container text segment five wide column" id="secSeg">
-      <h1 class="ui large sub header">
-        Price <span style="float: right; color: grey">In Stock</span>
-      </h1>
-      <p>$<%=product.price%></p>
-      <form action="/products/<%=product._id%>/add" method="POST">
-        <button
-          href="/products/<%=product._id%>/add"
-          class="blue inverted ui button fluid"
-        >
-          <i class="shopping cart icon"></i>
-          Add to Cart
-        </button>
-      </form>
-
-      <a
-        href="products/<%=product._id%>/buy"
-        class="blue inverted ui button fluid"
-      >
-        <i class="dollar sign icon"></i> Buy Now
-      </a>
-
-      <h1 class="ui large sub header">Comments</h1>
-      <a
-        href="/products/<%=product._id%>/comments/new"
-        class="ui button inverted primary mini"
-        style="margin: 5px 0"
-        >New Comment</a
-      >
-      <hr />
-      <% if(product.comments.length === 0){%>
-      <h5 class="ui disabled header">No Comments Yet</h5>
-      <%}%> <%product.comments.forEach(function(comment){%>
-      <div class="ui comments">
-        <div class="comment">
-          <div class="conten">
-            <a class="author"><%=comment.author.username%></a>
-            <div class="metadata">
-              <span class="date"><%=comment.created.toDateString()%></span>
+                <%if(!currentUser){%> <%}else{%> <%if(currentUser.isAdmin){%>
+                <div class="item">
+                    <a href="/products" class="button inverted primary ui">Go Back</a>
+                    <a href="/products/<%=product._id%>/edit" class="ui inverted yellow button">Edit</a>
+                    <form
+                        action="/products/<%=product._id%>?_method=DELETE"
+                        style="display: inline"
+                        class=""
+                        method="POST"
+                    >
+                        <button class="ui inverted red button">Delete</button>
+                    </form>
+                </div>
+                <%}%> <%}%>
             </div>
-            <div class="text"><%=comment.text%></div>
-            <div class="actions">
-              <%if(!currentUser){%> <%}else{%> <%if(currentUser.username ==
-              comment.author.username||currentUser.isAdmin){%>
-              <a
-                href="/products/<%=product._id%>/comments/<%=comment._id%>/edit"
-                class="edit"
-                >Edit</a
-              >
-              <a
-                href="/products/<%=product._id%>/comments/<%=comment._id%>/delete"
-                class="delete"
-                >Delete</a
-              >
-              <%}%> <%}%>
-            </div>
-          </div>
         </div>
-      </div>
-      <div></div>
-      <%})%>
+        <div class="ui container text segment five wide column" id="secSeg">
+            <h1 class="ui large sub header">Price <span style="float: right; color: grey">In Stock</span></h1>
+            <p>$<%=product.price%></p>
+            <form action="/products/<%=product._id%>/add" method="POST">
+                <button href="/products/<%=product._id%>/add" class="blue inverted ui button fluid">
+                    <i class="shopping cart icon"></i>
+                    Add to Cart
+                </button>
+            </form>
+            <select class="ui selection compact fluid dropdown mini" id="d">
+                <option value="1">Qty: <%=product.quantity%></option>
+                <%for(var i = 1; i<6; i++){%> <%if(i!== product.quantity){%>
+                <option value="<%=i%>">Qty: <%=i%></option>
+
+                <%}%> <%}%>
+            </select>
+            <div id="buyNow" class="blue inverted ui button fluid"><i class="dollar sign icon"></i> Buy Now</div>
+
+            <h1 class="ui large sub header">Comments</h1>
+            <a
+                href="/products/<%=product._id%>/comments/new"
+                class="ui button inverted primary mini"
+                style="margin: 5px 0"
+                >New Comment</a
+            >
+            <hr />
+            <% if(product.comments.length === 0){%>
+            <h5 class="ui disabled header">No Comments Yet</h5>
+            <%}%> <%product.comments.forEach(function(comment){%>
+            <div class="ui comments">
+                <div class="comment">
+                    <div class="conten">
+                        <a class="author"><%=comment.author.username%></a>
+                        <div class="metadata">
+                            <span class="date"><%=comment.created.toDateString()%></span>
+                        </div>
+                        <div class="text"><%=comment.text%></div>
+                        <div class="actions">
+                            <%if(!currentUser){%> <%}else{%> <%if(currentUser.username ==
+                            comment.author.username||currentUser.isAdmin){%>
+                            <a href="/products/<%=product._id%>/comments/<%=comment._id%>/edit" class="edit">Edit</a>
+                            <a href="/products/<%=product._id%>/comments/<%=comment._id%>/delete" class="delete"
+                                >Delete</a
+                            >
+                            <%}%> <%}%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div></div>
+            <%})%>
+        </div>
     </div>
-  </div>
 </div>
+<div id="dim"></div>
+<span id="variableJSON" hidden> <%= JSON.stringify(product) %> </span>
 
+<script type="text/javascript">
+    $('.ui.dropdown').dropdown();
+    var product = JSON.parse($('#variableJSON').text());
+    $('#variableJSON').remove();
+    var stripe = Stripe(
+        'pk_test_51I4FBXK6TknWrvo2sZ9APKIViiTkKjxdqUVTycQaH7cpisdXHAJmrHEKbRFxKzVpDA3rytQMpT0zukRVSL5Cxywl00anJR5fzW',
+    );
+    var checkoutButton = document.getElementById('buyNow');
+
+    checkoutButton.addEventListener('click', function () {
+        document.querySelector('#dim').classList.add('active');
+        let products = [
+            {
+                quantity: Number($('.ui.dropdown').dropdown('get value')),
+                id: product,
+            },
+        ];
+        var $form = $('<form>', {
+            action: '/checkout',
+            method: 'post',
+        });
+
+        $('<input>')
+            .attr({
+                type: 'hidden',
+                name: 'products',
+                value: JSON.stringify(products),
+            })
+            .appendTo($form);
+
+        $form.appendTo('body').submit();
+    });
+</script>
 <%- include("partials/footer")%>

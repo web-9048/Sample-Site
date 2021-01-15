@@ -1,0 +1,60 @@
+<%- include("partials/header")%>
+
+<div class="ui main container">
+  <div class="">
+    <h1 class="ui header">
+      <%=user.firstName + " " + user.lastName%>'s Profile
+    </h1>
+    <div class="ui stackable relaxed two column grid">
+      <div class="row">
+        <div class="column">
+          <a href="/users/<%=user._id%>/pending_orders">
+            <div class="ui segment added">
+              <h2 class="ui header">
+                <i class="truck icon"></i>
+
+                <div class="content">Pending Orders</div>
+              </h2>
+            </div>
+          </a>
+        </div>
+        <div class="column">
+          <a href="/users/<%=user._id%>/past_orders">
+            <div class="ui segment added">
+              <h2 class="ui header">
+                <i class="check square icon"></i>
+
+                <div class="content">Past Orders</div>
+              </h2>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column">
+          <a href="/users/<%=user._id%>/editLog">
+            <div class="ui segment added">
+              <h2 class="ui header">
+                <i class="key icon"></i>
+
+                <div class="content">Login Info</div>
+              </h2>
+            </div>
+          </a>
+        </div>
+        <div class="column">
+          <a href="/users/<%=user._id%>/edit">
+            <div class="ui segment added">
+              <h2 class="ui header">
+                <i class="user icon"></i>
+
+                <div class="content">User Info</div>
+              </h2>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("partials/footer")%>
+</div>

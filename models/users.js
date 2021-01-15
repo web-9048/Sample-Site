@@ -1,7 +1,8 @@
 var mongoose = require("mongoose");
 
 var userSchema = new mongoose.Schema({
-  name: String,
+  firstName: String,
+  lastName: String,
   username: String,
   password: String,
   products: [
@@ -13,7 +14,13 @@ var userSchema = new mongoose.Schema({
       quantity: { type: Number, default: 1 },
     },
   ],
-  address: String,
+  address: {
+    postalCode: String,
+    streetAddress: String,
+    country: String,
+    apartmentNum: String,
+    state: String,
+  },
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,

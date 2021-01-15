@@ -1,0 +1,79 @@
+<%- include("partials/header")%>
+<div class="ui main text container segment">
+    <div class="ui huge header">Register</div>
+    <form action="/products/register" autocomplete="off" class="ui form" method="POST">
+        <div class="field">
+            <label>Name</label>
+            <div class="two fields">
+                <div class="field">
+                    <input type="text" name="firstName" placeholder="First Name" />
+                </div>
+                <div class="field">
+                    <input type="text" name="lastName" placeholder="Last Name" />
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Email</label>
+            <input type="email" name="username" required />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" required />
+        </div>
+        <h4 class="ui dividing header">Shipping Information</h4>
+        <div class="field">
+            <label>Billing Address</label>
+            <div class="fields">
+                <div class="twelve wide field">
+                    <input
+                        type="text"
+                        name="address"
+                        placeholder="Street Address"
+                        onkeyup="return autoCompleteListener(this, event)"
+                        id="auto-complete"
+                        type="text"
+                        class="search"
+                        name="address"
+                        required
+                    />
+                    <div id="auto"></div>
+                </div>
+                <div class="four wide field">
+                    <input type="text" name="apt" placeholder="Apt #" />
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="six wide field">
+                <label>State</label>
+                <input type="text" name="state" />
+            </div>
+            <div class="six wide field">
+                <label>Country</label>
+                <div class="ui fluid search selection dropdown">
+                    <input type="hidden" name="country" />
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Country</div>
+                    <div class="menu">
+                        <div class="item" data-value="CAN"><i class="ca flag"></i>Canada</div>
+
+                        <div class="item" data-value="GBR"><i class="gb flag"></i>England</div>
+
+                        <div class="item" data-value="mx"><i class="mx flag"></i>Mexico</div>
+
+                        <div class="item" data-value="USA"><i class="us flag"></i>United States</div>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide field">
+                <label>Postal Code</label>
+                <input type="text" name="postalCode" />
+            </div>
+        </div>
+        <button class="ui inverted blue button inline">Submit!</button>
+    </form>
+</div>
+<script src="form.js"></script>
+
+<%- include("partials/footer")%>

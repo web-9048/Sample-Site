@@ -1,0 +1,152 @@
+<%- include("partials/header")%>
+
+<div class="ui main container segment">
+    <h1 class="ui header">All Pending Orders</h1>
+    <div class="ui items">
+        <%orders.map((order)=>{%>
+        <br />
+
+        <div>
+            <div class="ui top attached header divided grey">
+                <div class="in">
+                    <h2 class="ui sub header">Price</h2>
+                    <span>$<%=order.totalPrice%></span>
+                </div>
+
+                <div class="in">
+                    <h2 class="ui sub header">Order Placed</h2>
+                    <span><%=order.created.toDateString()%></span>
+                </div>
+                <div class="in">
+                    <h2 class="ui sub header">Ship To</h2>
+                    <span><%=order.shippingAddress.streetAddress%></span>
+                </div>
+            </div>
+
+            <div class="ui attached segment">
+                <div class="ui item">
+                    <div class="content">
+                        <div class="description">
+                            <div class="ui items">
+                                <div class="ui header">
+                                    Set The Estimated Arrival Date: <%if(Date.parse(order.arrivalTime)){%>
+
+                                    <input
+                                        type="date"
+                                        id="inpu"
+                                        name="<%=order._id%>"
+                                        value="<%=new Date(order.arrivalTime).toISOString().substring(0, 10)%>"
+                                    />
+                                    <%}else{%>
+                                    <input type="date" id="inpu" value="<%=order.arrivalTime%>" name="<%=order._id%>" />
+
+                                    <%}%>
+                                </div>
+                                <%order.products.map(p=>{%>
+
+                                <div class="item">
+                                    <div class="ui small image">
+                                        <img src="<%=p.id.image.url%>" />
+                                    </div>
+                                    <div class="content">
+                                        <a class="ui small header"> <%= p.id.title%> </a>
+                                        <% if(order.products.indexOf(p) === 0){%>
+                                        <div class="bu right">
+                                            <button
+                                                class="ui button fluid small inverted blue"
+                                                id="confirm"
+                                                style="display: block"
+                                                name="<%=order._id%>"
+                                            >
+                                                Confirm Delivery
+                                            </button>
+                                            <button class="ui button fluid small" style="display: block">
+                                                View Order Details
+                                            </button>
+                                        </div>
+                                        <%}%>
+
+                                        <div class="description">
+                                            <div class="grey">$<%=p.id.price%></div>
+
+                                            <p>Qty:<%=p.quantity%></p>
+                                        </div>
+                                        <div class="extra"></div>
+                                    </div>
+                                </div>
+
+                                <%})%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+        </div>
+    </div>
+    <div class="ui basic modal">
+        <div class="ui icon header">
+            <i class="paper plane outline icon"></i>
+            Confirm that you have delivered this Item
+        </div>
+
+        <div class="actions">
+            <div class="ui red basic cancel inverted button" id="no">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div class="ui green ok inverted button" id="yes">
+                <i class="checkmark icon"></i>
+                Yes
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('#inpu').forEach(function (inp) {
+        inp.onblur = function () {
+            if (inp.value !== '') {
+                var settings = {
+                    url: '/placed_orders/' + inp.name + '/update',
+                    method: 'POST',
+                    timeout: 0,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    data: {
+                        arrivalTime: new Date(inp.value),
+                    },
+                };
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                });
+            }
+        };
+    });
+    document.querySelectorAll('#confirm').forEach(function (butt) {
+        console.log(butt);
+
+        butt.onclick = function () {
+            console.log();
+            $('.ui.modal').modal('show');
+            document.querySelector('#yes').addEventListener('click', function () {
+                var settings = {
+                    url: '/placed_orders/' + butt.name + '/update',
+                    method: 'POST',
+                    timeout: 0,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    data: {
+                        delivered: true,
+                    },
+                };
+                $.ajax(settings).done(function (response) {
+                    console.log(response);
+                });
+            });
+        };
+    });
+</script>
+<%- include("partials/footer")%>

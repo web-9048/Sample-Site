@@ -1,119 +1,172 @@
-var express = require("express"),
-  router = express.Router(),
-  middleware = require("../middleware/middleware"),
-  User = require("../models/users"),
-  Product = require("../models/products");
+var express = require('express'),
+    router = express.Router(),
+    middleware = require('../middleware/middleware'),
+    User = require('../models/users'),
+    Product = require('../models/products');
+const multer = require('multer');
 
-router.get("/products/:id", function (req, res) {
-  Product.findById(req.params.id)
-    .populate("comments")
-    .exec(function (err, foundProduct) {
-      if (err) {
-        console.log(err);
-        req.flash("error", err.message);
-        res.redirect("back");
-      } else {
-        res.render("show.ejs", { product: foundProduct });
-      }
+router.get('/products/:id', function (req, res) {
+    Product.findById(req.params.id)
+        .populate('comments')
+        .exec(function (err, foundProduct) {
+            if (err) {
+                console.log(err);
+                req.flash('error', err.message);
+                return res.redirect('back');
+            } else {
+                res.render('show.ejs', { product: foundProduct });
+            }
+        });
+});
+router.get('/', function (req, res) {
+    res.render('home.ejs');
+});
+router.get('/products', function (req, res) {
+    Product.find({}, function (err, products) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            return res.redirect('back');
+        } else {
+            res.render('products.ejs', { products: products });
+        }
     });
 });
-router.get("/", function (req, res) {
-  res.render("home.ejs");
+router.get('/new', middleware.isLoggedIn, function (req, res) {
+    res.render('form.ejs');
 });
-router.get("/products", function (req, res) {
-  Product.find({}, function (err, products) {
-    if (err) {
-      console.log(err);
-      req.flash("error", err.message);
-      res.redirect("back");
-    } else {
-      res.render("products.ejs", { products: products });
-    }
-  });
-});
-router.get("/new", middleware.isLoggedIn, function (req, res) {
-  res.render("form.ejs");
-});
-router.post("/products/new", middleware.isLoggedIn, function (req, res) {
-  var title = req.body.title;
-  var image = req.body.image;
-  var body = req.body.body;
-  Product.create(
-    {
-      title: title,
-      image: image,
-      body: body,
-      price: req.body.price,
-      author: {
-        username: req.user.name,
-        id: req.user.id,
-      },
+
+var storage = multer.diskStorage({
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + file.originalname);
     },
-    function (err, product) {
-      if (err) {
-        console.log(err);
-        req.flash("error", err.message);
-        res.redirect("back");
-      } else {
-        res.redirect("/products");
-      }
-    }
-  );
 });
+var imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter });
 
-router.get("/products/:id", function (req, res) {
-  Product.findById(req.params.id)
-    .populate("comments")
-    .exec(function (err, product) {
-      if (err) {
-        console.log(err);
-        req.flash("error", err.message);
-        res.redirect("back");
-      } else {
-        res.render("show.ejs", { product: product });
-      }
+var cloudinary = require('cloudinary');
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.C_API_KEY,
+    api_secret: process.env.C_API_SECRET,
+});
+router.post('/products/new', middleware.isLoggedIn, upload.single('image'), function (req, res) {
+    var title = req.body.title;
+
+    var body = req.body.body;
+    cloudinary.uploader.upload(req.file.path, function (result) {
+        var image = result.secure_url;
+
+        Product.create(
+            {
+                title: title,
+                image: {
+                    url: image,
+                    id: result.public_id,
+                },
+                body: body,
+                price: req.body.price,
+                author: {
+                    username: req.user.firstName + ' ' + req.user.lastName,
+                    id: req.user.id,
+                },
+            },
+            function (err, product) {
+                if (err) {
+                    console.log(err);
+                    req.flash('error', err.message);
+                    return res.redirect('back');
+                } else {
+                    return res.redirect('/products');
+                }
+            },
+        );
     });
 });
-router.get("/products/:id/edit", middleware.blogOwnership, function (req, res) {
-  Product.findById(req.params.id, function (err, product) {
-    if (err) {
-      console.log(err);
-      req.flash("error", err.message);
-      res.redirect("back");
-    } else {
-      res.render("edit.ejs", { product: product });
-    }
-  });
-});
-router.put("/products/:id", middleware.blogOwnership, function (req, res) {
-  Product.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true },
-    function (err, newProduct) {
-      if (err) {
-        console.log(err);
-        req.flash("error", err.message);
-        res.redirect("/products");
-      } else {
-        console.log(newProduct);
-        console.log(req.body.product);
 
-        res.redirect("/products/" + req.params.id);
-      }
-    }
-  );
+router.get('/products/:id', function (req, res) {
+    Product.findById(req.params.id)
+        .populate('comments')
+        .exec(function (err, product) {
+            if (err) {
+                console.log(err);
+                req.flash('error', err.message);
+                return res.redirect('back');
+            } else {
+                res.render('show.ejs', { product: product });
+            }
+        });
+});
+router.get('/products/:id/edit', middleware.blogOwnership, function (req, res) {
+    Product.findById(req.params.id, function (err, product) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            return res.redirect('back');
+        } else {
+            res.render('edit.ejs', { product: product });
+        }
+    });
+});
+router.put('/products/:id', middleware.blogOwnership, upload.single('image'), async function (req, res) {
+    Product.findById(req.params.id, async function (err, product) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            return res.redirect('/products');
+        } else {
+            if (req.file) {
+                try {
+                    await cloudinary.v2.uploader.destroy(product.id);
+                    var result = await cloudinary.v2.uploader.upload(req.file.path);
+                    product.image = { id: result.public_id, url: result.secure_url };
+                } catch (err) {
+                    req.flash('error', err.message);
+                    return res.redirect('back');
+                }
+            }
+            product.name = req.body.name;
+            product.description = req.body.description;
+            product.save();
+            console.log(product);
+            req.flash('success', 'Successfully Updated!');
+            return res.redirect('/products/' + product._id);
+        }
+    });
 });
 
-router.delete("/products/:id", middleware.blogOwnership, function (req, res) {
-  Blogs.remove({ _id: req.params.id }, function (err, product) {
-    if (err) {
-      console.log(err);
-      req.flash("error", err.message);
-      res.redirect("/");
-    } else {
-      res.redirect("/products");
-    }
-  });
+router.delete('/products/:id', middleware.blogOwnership, function (req, res) {
+    Product.findById(req.params.id, async function (err, p) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            return res.redirect('/products');
+        }
+        console.log(p);
+        Product.remove({ _id: req.params.id }, async function (err, product) {
+            if (err) {
+                console.log(err);
+                req.flash('error', err.message);
+                return res.redirect('/products');
+            } else {
+                try {
+                    console.log(product);
+                    await cloudinary.v2.uploader.destroy(p.image.id);
+                } catch (err) {
+                    console.log(err);
+                    req.flash('error', err.message);
+                    return res.redirect('/products');
+                }
+
+                return res.redirect('/products');
+            }
+        });
+    });
 });
 module.exports = router;

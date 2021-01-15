@@ -1,198 +1,79 @@
 <%- include("partials/header")%>
 <div class="ui main text container segment">
-  <div class="ui huge header">Register</div>
-  <form
-    action="/products/register"
-    autocomplete="off"
-    class="ui form"
-    method="POST"
-  >
-    <div class="field">
-      <label>Your name</label>
-      <input type="text" name="name" required />
-    </div>
-    <div class="field">
-      <label>Email</label>
-      <input type="email" name="username" required />
-    </div>
-    <div class="field">
-      <label>Address</label>
-      <input
-        onkeyup="return autoCompleteListener(this, event)"
-        id="auto-complete"
-        type="text"
-        class="search"
-        name="address"
-        required
-      />
-      <div id="auto"></div>
-    </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" name="password" required />
-    </div>
-    <button class="ui inverted blue button inline">Submit!</button>
-  </form>
+    <div class="ui huge header">Register</div>
+    <form action="/products/register" autocomplete="off" class="ui form" method="POST">
+        <div class="field">
+            <label>Name</label>
+            <div class="two fields">
+                <div class="field">
+                    <input type="text" name="firstName" placeholder="First Name" />
+                </div>
+                <div class="field">
+                    <input type="text" name="lastName" placeholder="Last Name" />
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>Email</label>
+            <input type="email" name="username" required />
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input type="password" name="password" required />
+        </div>
+        <h4 class="ui dividing header">Shipping Information</h4>
+        <div class="field">
+            <label>Billing Address</label>
+            <div class="fields">
+                <div class="twelve wide field">
+                    <input
+                        type="text"
+                        name="address"
+                        placeholder="Street Address"
+                        onkeyup="return autoCompleteListener(this, event)"
+                        id="auto-complete"
+                        type="text"
+                        class="search"
+                        name="address"
+                        required
+                    />
+                    <div id="auto"></div>
+                </div>
+                <div class="four wide field">
+                    <input type="text" name="apt" placeholder="Apt #" />
+                </div>
+            </div>
+        </div>
+        <div class="fields">
+            <div class="six wide field">
+                <label>State</label>
+                <input type="text" name="state" />
+            </div>
+            <div class="six wide field">
+                <label>Country</label>
+                <div class="ui fluid search selection dropdown">
+                    <input type="hidden" name="country" />
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Country</div>
+                    <div class="menu">
+                        <div class="item" data-value="CAN"><i class="ca flag"></i>Canada</div>
+
+                        <div class="item" data-value="GBR"><i class="gb flag"></i>England</div>
+
+                        <div class="item" data-value="mx"><i class="mx flag"></i>Mexico</div>
+
+                        <div class="item" data-value="USA"><i class="us flag"></i>United States</div>
+                    </div>
+                </div>
+            </div>
+            <div class="four wide field">
+                <label>Postal Code</label>
+                <input type="text" name="postalCode" />
+            </div>
+        </div>
+        <button class="ui inverted blue button inline">Submit!</button>
+    </form>
 </div>
-<script>
-  function autocomplete(inp, arr) {
-    /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-    var currentFocus;
-    /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", function (e) {
-      var a,
-        b,
-        i,
-        val = this.value;
-      /*close any already open lists of autocompleted values*/
-      closeAllLists();
-      if (!val) {
-        return false;
-      }
-      currentFocus = -1;
-      console.log(this.id);
-      /*create a DIV element that will contain the items (values):*/
-      a = document.createElement("DIV");
-      a.setAttribute("id", "autocomplete-list");
-      a.setAttribute("class", "autocomplete-items");
-      /*append the DIV element as a child of the autocomplete container:*/
-      this.parentNode.appendChild(a);
-      /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
-        /*check if the item starts with the same letters as the text field value:*/
+<script src="form.js"></script>
 
-        /*create a DIV element for each matching element:*/
-        b = document.createElement("DIV");
-        /*make the matching letters bold:*/
-        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-        b.innerHTML += arr[i].substr(val.length);
-        /*insert a input field that will hold the current array item's value:*/
-        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-        /*execute a function when someone clicks on the item value (DIV element):*/
-        b.addEventListener("click", function (e) {
-          /*insert the value for the autocomplete text field:*/
-          inp.value = this.getElementsByTagName("input")[0].value;
-          /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
-          closeAllLists();
-        });
-        a.appendChild(b);
-      }
-    });
-    inp.addEventListener("keydown", function (e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        currentFocus++;
-
-        addActive(x);
-      } else if (e.keyCode == 38) {
-        currentFocus--;
-
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        e.preventDefault();
-        if (currentFocus > -1) {
-          if (x) x[currentFocus].click();
-        }
-      }
-    });
-    function addActive(x) {
-      if (!x) return false;
-      removeActive(x);
-      if (currentFocus >= x.length) currentFocus = 0;
-      if (currentFocus < 0) currentFocus = x.length - 1;
-      /*add class "autocomplete-active":*/
-      x[currentFocus].classList.add("autocomplete-active");
-    }
-    function removeActive(x) {
-      /*a function to remove the "active" class from all autocomplete items:*/
-      for (var i = 0; i < x.length; i++) {
-        x[i].classList.remove("autocomplete-active");
-      }
-    }
-    function closeAllLists(elmnt) {
-      var x = document.getElementsByClassName("autocomplete-items");
-      for (var i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
-          x[i].parentNode.removeChild(x[i]);
-        }
-      }
-    }
-    /*execute a function when someone clicks in the document:*/
-    document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
-    });
-  }
-</script>
-<script>
-  var AUTOCOMPLETION_URL =
-      "https://autocomplete.geocoder.ls.hereapi.com/6.2/suggest.json",
-    ajaxRequest = new XMLHttpRequest(),
-    query = "";
-
-  /**
-   * If the text in the text box  has changed, and is not empty,
-   * send a geocoding auto-completion request to the server.
-   *
-   * @param {Object} textBox the textBox DOM object linked to this event
-   * @param {Object} event the DOM event which fired this listener
-   */
-  function autoCompleteListener(textBox, event) {
-    if (query != textBox.value) {
-      if (textBox.value.length >= 1) {
-        /**
-         * A full list of available request parameters can be found in the Geocoder Autocompletion
-         * API documentation.
-         *
-         */
-        var params =
-          "?" +
-          "query=" +
-          encodeURIComponent(textBox.value) + // The search text which is the basis of the query
-          "&beginHighlight=" +
-          encodeURIComponent("<mark>") + //  Mark the beginning of the match in a token.
-          "&endHighlight=" +
-          encodeURIComponent("</mark>") + //  Mark the end of the match in a token.
-          "&maxresults=5" + // The upper limit the for number of suggestions to be included
-          // in the response.  Default is set to 5.
-          "&apikey=QvaMnQZF7tcc68Fn9Gm9jBk3oZUPbd2_iePMz9PeUkc";
-        ajaxRequest.open(
-          "GET",
-          "https://cors-anywhere.herokuapp.com/" + AUTOCOMPLETION_URL + params
-        );
-        ajaxRequest.send();
-      }
-    }
-    query = textBox.value;
-  }
-
-  function onAutoCompleteSuccess() {
-    addSuggestionsToPanel(this.response); // In this context, 'this' means the XMLHttpRequest itself.
-  }
-
-  /**
-   * This function will be called if a communication error occurs during the XMLHttpRequest
-   */
-  function onAutoCompleteFailed() {
-    alert("Ooops!");
-  }
-
-  // Attach the event listeners to the XMLHttpRequest object
-  ajaxRequest.addEventListener("load", onAutoCompleteSuccess);
-  ajaxRequest.addEventListener("error", onAutoCompleteFailed);
-  ajaxRequest.responseType = "json";
-
-  function addSuggestionsToPanel(response) {
-    console.log(response);
-    let arr = [];
-
-    response.suggestions.map((x) => {
-      arr.push(x.label.replace(/(<([^>]+)>)/gi, ""));
-    });
-    autocomplete(document.getElementById("auto-complete"), arr);
-  }
-</script>
-<script></script>
 <%- include("partials/footer")%>

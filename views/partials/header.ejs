@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
-    />
-    <link rel="stylesheet" type="text/css" href="/stylesheets/app.css" />
-    <script
-      src="https://code.jquery.com/jquery-3.1.1.min.js"
-      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
-      integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
-      crossorigin="anonymous"
-    ></script>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucia Site</title>
-  </head>
-  <body>
-    <div class="ui fixed inverted menu">
-      <div class="ui container">
-        <a href="/products"
-          ><div class="header item"><i class="code icon"></i>LUL</div></a
-        >
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css" />
 
-        <%if(!currentUser){%>
-        <a href="/register" class="item right">Sign Up</a>
-        <a href="/login" class="item">Log In</a>
-        <%}else{%> <%if(currentUser.isAdmin){%>
-        <a href="/new" class="item">New Product</a>
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+            integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+            crossorigin="anonymous"
+        ></script>
 
-        <%}%>
-        <a href="/logout" class="item right">Logout</a>
-        <a href="/cart" class="item"><i class="ui icon shopping cart"></i></a>
-        <a href="#" class="item">Signed in as <%=currentUser.username%></a>
-        <%}%>
-      </div>
-    </div>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lucia Site</title>
+    </head>
+    <body>
+        <div class="ui fixed inverted menu">
+            <div class="ui container">
+                <a href="/products"
+                    ><div class="header item"><i class="code icon"></i>LUL</div></a
+                >
 
-    <div class="ui container">
-      <%if(errorMessage.length > 0 ){%>
-      <br />
-      <br />
-      <br />
-      <br />
-      <div style="margin-bottom: -70px" class="ui red message">
-        <p><%=errorMessage%></p>
-      </div>
-      <%}%> <%if(successMessage.length > 0 ){%>
-      <br />
-      <br />
-      <br />
-      <br />
-      <div style="margin-bottom: -70px" class="ui blue message">
-        <p><%=successMessage%></p>
-      </div>
+                <%if(!currentUser){%>
+                <a href="/register" class="item right">Sign Up</a>
+                <a href="/login" class="item">Log In</a>
+                <%}else{%> <%if(currentUser.isAdmin){%>
+                <a href="/new" class="item">New Product</a>
+                <a href="/placed_orders" class="item">Placed Orders</a>
 
-      <%}%>
-    </div>
+                <%}%>
+                <a href="/logout" class="item right">Logout</a>
+                <a href="/cart" class="item"><i class="ui icon shopping cart"></i></a>
+                <a href="/users/<%=currentUser._id%>" class="item">Signed in as <%=currentUser.username%></a>
+                <%}%>
+            </div>
+        </div>
 
+        <div class="ui container">
+            <%if(errorMessage.length > 0 ){%>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div style="margin-bottom: -70px" class="ui red message">
+                <p><%=errorMessage%></p>
+            </div>
+            <%}%> <%if(successMessage.length > 0 ){%>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div style="margin-bottom: -70px" class="ui blue message">
+                <p><%=successMessage%></p>
+            </div>
+
+            <%}%>
+        </div>
+    </body>
+</html>

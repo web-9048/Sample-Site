@@ -1,5 +1,6 @@
 var express = require("express"),
   Products = require("../models/products"),
+  User = require("../models/users"),
   flash = require("connect-flash");
 var middleware = {};
 middleware.blogOwnership = function (req, res, next) {
@@ -51,11 +52,13 @@ middleware.isLoggedIn = function (req, res, next) {
   }
 };
 middleware.itemInCart = function (req, res, next) {
-  if (req.user.products.length > 0) {
-    next();
-  } else {
-    req.flash("error", "Your Cart is Empty Add Some Items First");
-    res.redirect("/products");
-  }
+  User.findById(req.user._id, function (err, user) {
+    if (user.products.length > 0) {
+      next();
+    } else {
+      req.flash("error", "Your Cart is Empty Add Some Items First");
+      res.redirect("/products");
+    }
+  });
 };
 module.exports = middleware;

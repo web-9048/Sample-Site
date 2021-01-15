@@ -12,9 +12,7 @@ var expressSanitizer = require('express-sanitizer');
     (passportLocalMongoose = require('passport-local-mongoose')),
     (passport = require('passport')),
     (flash = require('connect-flash'));
-(Comment = require('./models/comments.js')),
-    (Blogs = require('./models/products.js')),
-    (User = require('./models/users.js'));
+(Comment = require('./models/comments.js')), (User = require('./models/users.js'));
 
 var commentRouts = require('./routs/comments.js'),
     productRouts = require('./routs/products.js'),

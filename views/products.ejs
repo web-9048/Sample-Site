@@ -1,29 +1,45 @@
 <%- include("partials/header")%>
 <div class="ui main container">
-    <div class="ui huge header">Lucias Website</div>
     <div class="ui top attached segment">
-        <div class="ui divided items">
+        <h1 id="mega" class="ui huge header">web-9045</h1>
+
+        <div class="ui three special stackable doubling cards">
             <%products.forEach(function(product){%>
-            <div class="item">
-                <div class="image">
+            <div class="card blue">
+                <div class="blurring dimmable image">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <form action="/products/<%=product._id%>/add" method="POST">
+                                    <button href="/products/<%=product._id%>/add" class="inverted ui button fluid">
+                                        <i class="shopping cart icon"></i>
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <img src="<%=product.image.url%>" width="200" height="100" />
                 </div>
-                <div class="content block">
-                    <a href="/products/<%=product._id%>" class="header"><%=product.title%></a>
-                    <div class="meta block" style="display: block; margin: 0; padding: 0">
-                        <p><%=product.created.toDateString()%></p>
+                <div class="content">
+                    <a href="/products/<%=product._id%>/" class="header"><%=product.title%></a>
+                    <div class="meta">
+                        <span class="date">Price: $<%=product.price%></span>
                     </div>
-                    <div class="description">
-                        <p><%-product.body.substring(0, 50)%>...</p>
-                    </div>
-                    <div class="extra block">
-                        <a href="/products/<%=product._id%>" class="button inverted primary ui">Product Details</a>
-                    </div>
+                    <div class="description"><%=product.body.substring(0, 50)%>...</div>
+                </div>
+                <div class="extra content">
+                    <a href="/products/<%=product._id%>" class="button inverted primary ui">Product Details</a>
                 </div>
             </div>
+
             <%})%>
         </div>
     </div>
 </div>
-
+<script>
+    $('.special.cards .image').dimmer({
+        on: 'hover',
+    });
+</script>
 <%- include("partials/footer")%>

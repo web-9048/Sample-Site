@@ -36,7 +36,7 @@ router.post('/products/register', function (req, res) {
                 }
 
                 passport.authenticate('local')(req, res, function () {
-                    req.flash('success', 'Welcome to Lucias Site');
+                    req.flash('success', 'Welcome to web-9045');
                     res.redirect('/products');
                 });
             },
@@ -61,7 +61,7 @@ router.post('/products/register', function (req, res) {
                     failureFlash: true,
                 })(req, res, function () {
                     console.log('user');
-                    req.flash('success', 'Welcome to Lucias Site');
+                    req.flash('success', 'Welcome to web-9045');
                     res.redirect('/products');
                 });
             },

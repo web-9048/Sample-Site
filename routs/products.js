@@ -103,7 +103,7 @@ router.get('/products/:id', function (req, res) {
             }
         });
 });
-router.get('/products/:id/edit', middleware.blogOwnership, function (req, res) {
+router.get('/products/:id/edit', middleware.productOwnership, function (req, res) {
     Product.findById(req.params.id, function (err, product) {
         if (err) {
             console.log(err);
@@ -114,7 +114,7 @@ router.get('/products/:id/edit', middleware.blogOwnership, function (req, res) {
         }
     });
 });
-router.put('/products/:id', middleware.blogOwnership, upload.single('image'), async function (req, res) {
+router.put('/products/:id', middleware.productOwnership, upload.single('image'), async function (req, res) {
     Product.findById(req.params.id, async function (err, product) {
         if (err) {
             console.log(err);
@@ -141,7 +141,7 @@ router.put('/products/:id', middleware.blogOwnership, upload.single('image'), as
     });
 });
 
-router.delete('/products/:id', middleware.blogOwnership, function (req, res) {
+router.delete('/products/:id', middleware.productOwnership, function (req, res) {
     Product.findById(req.params.id, async function (err, p) {
         if (err) {
             console.log(err);

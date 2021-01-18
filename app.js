@@ -25,15 +25,16 @@ var commentRouts = require('./routs/comments.js'),
 //   { useNewUrlParser: true, useUnifiedTopology: true }
 // );
 // mongoose.connect('mongodb://localhost/online_shopping');
-
-const MongoClient = require('mongodb').MongoClient;
-const uri = 'mongodb+srv://mats2:Scout2005@cluster0.jsefa.mongodb.net/online_app?retryWrites=true&w=majority';
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect((err) => {
-    const collection = client.db('test').collection('devices');
-    // perform actions on the collection object
-    client.close();
-});
+mongoose.connect(process.env.DB_URL);
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = 'mongodb+srv://mats2:Scout2005@cluster0.jsefa.mongodb.net/online_app?retryWrites=true&w=majority';
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// client.connect((err) => {
+//     // const collection = client.db('test').collection('devices');
+//     // perform actions on the collection object
+//     console.log(err);
+//     client.close();
+// });
 
 app.use(methodOverride('_method'));
 app.use(express.static('public'));

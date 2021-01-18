@@ -24,8 +24,11 @@ var commentRouts = require('./routs/comments.js'),
 //   "mongodb://uigh05hqkcltukk32zbj:kKOkWDw9efrKXJdeA9w4@bhpygth5x3lvaj4-mongodb.services.clever-cloud.com:27017/bhpygth5x3lvaj4",
 //   { useNewUrlParser: true, useUnifiedTopology: true }
 // );
-mongoose.connect('mongodb://localhost/online_shopping');
-
+// mongoose.connect('mongodb://localhost/online_shopping');
+mongoose.connect('mongodb+srv://mats2:Scout2005@cluster0.jsefa.mongodb.net/online_app?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 app.use(methodOverride('_method'));
 app.use(express.static('public'));
 app.use(express.static('scripts'));

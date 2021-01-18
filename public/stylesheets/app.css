@@ -4,18 +4,13 @@ i.code.icon {
 div.container.main {
     margin-top: 6em;
 }
-/* .ui.menu .item {
-    color: #2185d0;
+.ui.menu.inverted .item {
+    color: #54c8ff;
 }
-.a.item:hover {
-    color: #2185d0;
-} */
-.ui.menu .header.item {
-    color: #2185d0;
-    font-size: 1.5em;
-    /* padding-top: 30px;
-    padding-bottom: 30px; */
+.ui.menu.inverted .item:hover {
+    color: #54c8ff !important;
 }
+
 #mega {
     font-size: 4em;
 }
@@ -24,12 +19,12 @@ div.container.main {
     padding: 1rem !important;
 }
 .ui.blue.button {
-    color: #2185d0;
+    color: #54c8ff;
     background-color: #fbfbfb;
     border: 1px solid rgba(34, 36, 38, 0.15);
 }
 .ui.blue.button:hover {
-    color: #2185d0;
+    color: #54c8ff;
     background-color: rgb(236, 235, 235);
     border: 1px solid rgba(34, 36, 38, 0.15);
 }
@@ -79,7 +74,7 @@ input:invalid {
     padding: 80px !important;
 }
 .ui.segment.added:hover {
-    border: 1px solid #2185d0;
+    border: 1px solid #54c8ff;
 }
 #secSeg {
     margin-top: 0;
@@ -93,7 +88,7 @@ input:invalid {
     padding-top: 1rem;
 }
 .color123 {
-    color: #2185d0;
+    color: #54c8ff;
 }
 .ui.checkbox {
     top: 50%;

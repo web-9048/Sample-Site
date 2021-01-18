@@ -132,7 +132,7 @@ router.put('/products/:id', middleware.productOwnership, upload.single('image'),
                 }
             }
             product.name = req.body.name;
-            product.description = req.body.description;
+            product.body = req.body.body;
             product.save();
             console.log(product);
             req.flash('success', 'Successfully Updated!');

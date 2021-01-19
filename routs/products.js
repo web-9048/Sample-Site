@@ -40,7 +40,7 @@ router.get('/products', function (req, res) {
         }
     });
 });
-router.get('/new', middleware.isLoggedIn, function (req, res) {
+router.get('/new', middleware.isAdmin, function (req, res) {
     res.render('form.ejs');
 });
 
@@ -64,7 +64,7 @@ cloudinary.config({
     api_key: process.env.C_API_KEY,
     api_secret: process.env.C_API_SECRET,
 });
-router.post('/products/new', middleware.isLoggedIn, upload.single('image'), function (req, res) {
+router.post('/products/new', middleware.isLoggedIn, middleware.isAdmin, upload.single('image'), function (req, res) {
     var title = req.body.title;
 
     var body = req.body.body;

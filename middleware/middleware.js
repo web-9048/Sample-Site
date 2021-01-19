@@ -51,6 +51,19 @@ middleware.isLoggedIn = function (req, res, next) {
         res.redirect('/login');
     }
 };
+middleware.isAdmin = function (req, res, next) {
+    if (req.user) {
+        if (req.user.isAdmin) {
+            next();
+        } else {
+            req.flash('error', 'You dont have the authority to perform this action');
+            res.redirect('/login');
+        }
+    } else {
+        req.flash('error', 'Please Log in First');
+        res.redirect('/login');
+    }
+};
 middleware.itemInCart = function (req, res, next) {
     User.findById(req.user._id, function (err, user) {
         if (user.products.length > 0) {

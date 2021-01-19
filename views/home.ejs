@@ -24,11 +24,26 @@
     <body>
         <div class="slideshow">
             <li></li>
+            <li></li>
+            <li></li>
             <div id="landing-header">
                 <h1>Welcome to web-9045!</h1>
 
-                <a class="ui button blue" href="/products"> View Our Products </a>
+                <a class="ui button inverted" href="/products"> View Our Products </a>
             </div>
         </div>
     </body>
+    <style>
+        .slideshow li:nth-child(1) {
+            background-image: url('<%=products[0].image.url%>');
+        }
+        .slideshow li:nth-child(2) {
+            background-image: url('<%=products[2].image.url%>');
+            animation-delay: 10s;
+        }
+        .slideshow li:nth-child(3) {
+            background-image: url('<%=products[3].image.url%>');
+            animation-delay: 20s;
+        }
+    </style>
 </html>

@@ -1,45 +1,209 @@
 <%- include("partials/header")%>
-<div class="ui main container">
-    <div class="ui top attached segment">
-        <h1 id="mega" class="ui huge header">web-9045</h1>
+<style>
+    .hidden.menu {
+        display: none;
+    }
+    .ui.message.pad {
+        display: none;
+    }
+    .ui.message {
+        margin-top: 20px !important;
+        margin-bottom: -50px !important;
+    }
+</style>
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment">
+        <div class="">
+            <div class="ui large secondary inverted pointing menu">
+                <a class="toc item">
+                    <i class="sidebar icon"></i>
+                </a>
+                <a href="/products" class="active item">web-9045</a>
+                <a href="#search" class="item">Our Products</a>
 
-        <div class="ui four special raised stackable doubling cards">
-            <%products.forEach(function(product){%>
-            <div class="card blue">
-                <div class="blurring dimmable image">
-                    <div class="ui dimmer">
-                        <div class="content">
-                            <div class="center">
-                                <form action="/products/<%=product._id%>/add" method="POST">
-                                    <button href="/products/<%=product._id%>/add" class="inverted ui button fluid">
-                                        <i class="shopping cart icon"></i>
-                                        Add to Cart
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <img src="<%=product.image.url%>" width="200" height="100" />
+                <%if(!currentUser){%>
+
+                <div class="right item">
+                    <a href="/login" class="ui inverted blue button">Log in</a>
+                    <a href="/register" class="ui inverted blue button">Sign Up</a>
                 </div>
-                <div class="content">
-                    <a href="/products/<%=product._id%>/" class="header"><%=product.title%></a>
-                    <div class="meta">
-                        <span class="date">Price: $<%=product.price%></span>
-                    </div>
-                    <div class="description"><%=product.body.substring(0, 50)%>...</div>
-                </div>
-                <div class="extra content">
-                    <a href="/products/<%=product._id%>" class="button inverted primary ui">Product Details</a>
-                </div>
+                <%}else{%> <%if(currentUser.isAdmin){%>
+                <a href="/new" class="item">New Product</a>
+                <a href="/placed_orders" class="item">Placed Orders</a>
+
+                <%}%>
+                <a href="/logout" class="item right">Logout</a>
+                <a href="/cart" class="item"><i class="ui icon shopping cart"></i></a>
+                <a href="/users/<%=currentUser._id%>" class="item">Signed in as <%=currentUser.username%></a>
+                <%}%>
+            </div>
+        </div>
+        <div class="ui container">
+            <%if(errorMessage && errorMessage.length > 0 ){%>
+            <div class="ui red message transition">
+                <i class="close icon"></i>
+
+                <div class=""><%=errorMessage%></div>
+            </div>
+            <%}%> <%if(successMessage && successMessage.length > 0 ){%>
+
+            <div class="ui message transition blue">
+                <i class="close icon"></i>
+
+                <div class=""><%=successMessage%></div>
             </div>
 
-            <%})%>
+            <%}%>
+        </div>
+        <div class="ui text container">
+            <h1 class="ui inverted header">web-9045</h1>
+            <h2>Lorem ipsum dolor sit amet dolor.</h2>
+            <%if(currentUser){%>
+            <a href="#search" class="ui large inverted blue button">Get Started <i class="right arrow icon"></i></a>
+
+            <%}else{%>
+            <a href="/register" class="ui large inverted blue button">Get Started <i class="right arrow icon"></i></a>
+
+            <% }%>
         </div>
     </div>
+    <div class="ui vertical stripe segment">
+        <div class="ui middle aligned stackable grid container">
+            <div class="row">
+                <div class="eight wide column">
+                    <h3 class="ui header">Lorem ipsum dolor sit.</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam aperiam sequi eos harum,
+                        pariatur magnam delectus excepturi expedita soluta eaque.
+                    </p>
+                    <h3 class="ui header">Lorem ipsum dolor sit amet.</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat non magnam quas a temporibus
+                        soluta.
+                    </p>
+                </div>
+                <div class="six wide right floated column">
+                    <img
+                        src="https://semantic-ui.com/examples/assets/images/wireframe/white-image.png"
+                        class="ui large bordered rounded image"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="search">
+        <div class="ui vertical stripe quote segment">
+            <div class="ui text container">
+                <h2 class="ui header huge">
+                    <div class="content">
+                        Search Our Products
+                        <div class="sub header">Or scroll through them <a href="#products">here!</a></div>
+                    </div>
+                </h2>
+                <div class="ui search fluid">
+                    <div class="ui icon input fluid large">
+                        <input class="prompt" type="text" placeholder="Search products..." />
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="products">
+        <div class="ui vertical stripe segment" id="product">
+            <div class="ui container">
+                <h3 class="ui header">Our Products</h3>
+                <br />
+                <div class="ui top attached">
+                    <div class="ui three special raised stackable doubling cards">
+                        <%products.forEach(function(product){%>
+                        <div class="card blue">
+                            <div class="blurring dimmable image">
+                                <div class="ui dimmer">
+                                    <div class="content">
+                                        <div class="center">
+                                            <form action="/products/<%=product._id%>/add" method="POST">
+                                                <button
+                                                    href="/products/<%=product._id%>/add"
+                                                    class="inverted ui button fluid"
+                                                >
+                                                    <i class="shopping cart icon"></i>
+                                                    Add to Cart
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img src="<%=product.image.url%>" width="200" height="100" />
+                            </div>
+                            <div class="content">
+                                <a href="/products/<%=product._id%>/" class="header"><%=product.title%></a>
+                                <div class="meta">
+                                    <span class="date">Price: $<%=product.price%></span>
+                                </div>
+                                <div class="description"><%=product.body.substring(0, 50)%>...</div>
+                            </div>
+                            <div class="extra content">
+                                <a href="/products/<%=product._id%>" class="button inverted primary ui"
+                                    >Product Details</a
+                                >
+                            </div>
+                        </div>
+
+                        <%})%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <span id="variableJSON" hidden> <%= JSON.stringify(products) %> </span>
+
+    <div class="ui main container"></div>
+    <script>
+        $('.special.cards .image').dimmer({
+            on: 'hover',
+        });
+    </script>
+    <%- include("partials/footer")%>
 </div>
 <script>
-    $('.special.cards .image').dimmer({
-        on: 'hover',
+    $(document).ready(function () {
+        // fix menu when passed
+        $('.masthead').visibility({
+            once: false,
+            onBottomPassed: function () {
+                $('.fixed.menu').transition('fade in');
+            },
+            onBottomPassedReverse: function () {
+                $('.fixed.menu').transition('fade out');
+            },
+        });
+
+        // create sidebar and attach to menu open
+        $('.ui.sidebar').sidebar('attach events', '.toc.item');
+        var products = JSON.parse($('#variableJSON').text());
+        $('#variableJSON').remove();
+        let arr = [];
+        products.map((x) =>
+            arr.push({
+                title: x.title,
+                description: x.body.substr(0, 50) + '...',
+                image: x.image.url,
+                url: '/products/' + x._id,
+            }),
+        );
+        console.log(arr);
+        console.log(products);
+        $('.ui.search').search({
+            source: arr,
+        });
     });
 </script>
-<%- include("partials/footer")%>
+<script>
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    });
+</script>

@@ -20,46 +20,67 @@
         <title>web-9045</title>
     </head>
     <body>
-        <div class="ui fixed inverted menu">
-            <div class="ui container">
-                <a href="/products"
-                    ><div class="header item"><i class="code icon"></i>web-9045</div></a
-                >
+        <div class="ui vertical inverted sidebar menu">
+            <%if(!currentUser){%>
+            <a href="/register" class="item">Sign Up</a>
+            <a href="/login" class="item">Log In</a>
+            <%}else{%> <%if(currentUser.isAdmin){%>
+            <a href="/new" class="item">New Product</a>
+            <a href="/placed_orders" class="item">Placed Orders</a>
 
-                <%if(!currentUser){%>
-                <a href="/register" class="item right">Sign Up</a>
-                <a href="/login" class="item">Log In</a>
-                <%}else{%> <%if(currentUser.isAdmin){%>
-                <a href="/new" class="item">New Product</a>
-                <a href="/placed_orders" class="item">Placed Orders</a>
+            <%}%>
+            <a href="/cart" class="item">Cart<i class="ui icon shopping cart"></i></a>
 
-                <%}%>
-                <a href="/logout" class="item right">Logout</a>
-                <a href="/cart" class="item"><i class="ui icon shopping cart"></i></a>
-                <a href="/users/<%=currentUser._id%>" class="item">Signed in as <%=currentUser.username%></a>
-                <%}%>
-            </div>
+            <a href="/logout" class="item">Logout</a>
+            <a href="/users/<%=currentUser._id%>" class="item">Signed in as <%=currentUser.username%></a>
+            <%}%>
         </div>
-
         <div class="ui container">
-            <%if(errorMessage.length > 0 ){%>
-            <br />
-            <br />
-            <br />
-            <br />
-            <div style="margin-bottom: -70px" class="ui red message">
-                <p><%=errorMessage%></p>
+            <%if(errorMessage && errorMessage.length > 0 ){%>
+            <div class="ui red message transition pad">
+                <i class="close icon"></i>
+
+                <div class=""><%=errorMessage%></div>
             </div>
-            <%}%> <%if(successMessage.length > 0 ){%>
-            <br />
-            <br />
-            <br />
-            <br />
-            <div style="margin-bottom: -70px" class="ui blue message">
-                <p><%=successMessage%></p>
+            <%}%> <%if(successMessage && successMessage.length > 0 ){%>
+
+            <div class="ui message transition pad blue">
+                <i class="close icon"></i>
+
+                <div class=""><%=successMessage%></div>
             </div>
 
             <%}%>
         </div>
-    </body>
-</html>
+
+        <div class="pusher">
+            <div class="ui fixed inverted menu hidden">
+                <div class="ui container">
+                    <a class="toc item">
+                        <i class="sidebar icon"></i>
+                    </a>
+                    <a href="/products" class="item" id="b"><i class="code icon"></i><span id="ss">web-9045</span> </a>
+                    <a href="/products#search" class="item">Our Products</a>
+
+                    <%if(!currentUser){%>
+                    <a href="/register" class="item right">Sign Up</a>
+                    <a href="/login" class="item">Log In</a>
+                    <%}else{%> <%if(currentUser.isAdmin){%>
+                    <a href="/new" class="item">New Product</a>
+                    <a href="/placed_orders" class="item">Placed Orders</a>
+
+                    <%}%>
+                    <a href="/cart" class="item"><i class="ui icon shopping cart"></i></a>
+
+                    <a href="/logout" class="item right">Logout</a>
+                    <a href="/users/<%=currentUser._id%>" class="item">Signed in as <%=currentUser.username%></a>
+                    <%}%>
+                </div>
+            </div>
+            <script>
+                $('.message .close').on('click', function () {
+                    $(this).closest('.message').transition('fade');
+                });
+                $('.ui.sidebar').sidebar('attach events', '.toc.item');
+            </script>
+

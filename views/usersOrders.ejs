@@ -49,8 +49,12 @@
                                             </button>
 
                                             <%if(!past){%>
-                                            <button class="ui button fluid small">Request a Cancellation</button>
-                                            <%}%> <%if(past){%><button class="ui button fluid">Request a refund</button>
+                                            <button class="ui button inverted blue fluid small">
+                                                Request a Cancellation
+                                            </button>
+                                            <%}%> <%if(past){%><button class="ui button inverted blue fluid">
+                                                Request a refund
+                                            </button>
                                             <%}%>
                                         </div>
                                         <%}%>
@@ -61,7 +65,9 @@
                                             <p>Qty:<%=p.quantity%></p>
                                         </div>
                                         <div class="extra">
-                                            <a href="/products/<%=p.id._id%>" class="ui button blue small">Buy Again</a>
+                                            <a href="/products/<%=p.id._id%>" class="ui button blue inverted small"
+                                                >Buy Again</a
+                                            >
                                             <a href="/products/<%=p.id._id%>/comments/new" class="ui small button"
                                                 >Leave a review</a
                                             >

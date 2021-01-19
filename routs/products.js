@@ -19,7 +19,15 @@ router.get('/products/:id', function (req, res) {
         });
 });
 router.get('/', function (req, res) {
-    res.render('home.ejs');
+    Product.find({}, function (err, product) {
+        if (err) {
+            console.log(err);
+            req.flash('error', err.message);
+            return res.redirect('back');
+        } else {
+            res.render('home.ejs', { products: product });
+        }
+    });
 });
 router.get('/products', function (req, res) {
     Product.find({}, function (err, products) {

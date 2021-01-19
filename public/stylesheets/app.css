@@ -7,10 +7,88 @@ div.container.main {
 .ui.menu.inverted .item {
     color: #54c8ff;
 }
+.hidden {
+    display: none;
+}
 .ui.menu.inverted .item:hover {
     color: #54c8ff !important;
 }
-
+.secondary.pointing.menu .toc.item {
+    display: none;
+}
+.inverted.fixed.menu .toc.item {
+    display: none;
+}
+.masthead.segment {
+    min-height: 700px;
+    padding: 1em 0em;
+}
+.masthead .logo.item img {
+    margin-right: 1em;
+}
+.masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+}
+.masthead h1.ui.header {
+    margin-top: 3em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+}
+.masthead h2 {
+    font-size: 1.7em;
+    font-weight: normal;
+}
+#product {
+    border: none !important;
+    padding-bottom: 0 !important;
+}
+@media only screen and (max-width: 700px) {
+    .secondary.pointing.menu .item,
+    .secondary.pointing.menu .menu {
+        display: none;
+    }
+    .inverted.fixed.menu .item,
+    .inverted.fixed.menu .menu {
+        display: none;
+    }
+    .secondary.pointing.menu .toc.item {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    }
+    .item#b {
+        /* display: block !important; */
+        align-items: center;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    }
+    .inverted.fixed.menu .toc.item {
+        display: block;
+        align-self: center;
+    }
+    .masthead.segment {
+        min-height: 350px !important;
+    }
+    .masthead h1.ui.header {
+        font-size: 2em !important;
+        margin-top: 1.5em !important;
+    }
+    .masthead h2 {
+        margin-top: 0.5em !important;
+        font-size: 1.5em !important;
+    }
+}
+.ui.secondary.inverted.pointing.menu .item {
+    color: #54c8ff !important;
+}
+.ui.secondary.inverted.pointing.menu .item:hover {
+    color: #3aa1d1 !important;
+}
+.ui.secondary.inverted.pointing.menu .active.item {
+    border-color: #54c8ff;
+}
 #mega {
     font-size: 4em;
 }
@@ -131,6 +209,11 @@ div.ui.segment {
 }
 .ui.message {
     font-size: 1rem;
+    z-index: 20;
+}
+.pad {
+    margin-top: 80px !important;
+    margin-bottom: -70px !important;
 }
 .ui.fluid.button {
     margin: 5px 0;
@@ -158,6 +241,56 @@ body {
 .ui.form .fields {
     margin: 0 -0.5em 0em;
 }
+.masthead.segment {
+    min-height: 700px;
+    padding: 1em 0em;
+}
+.masthead .ui.button.icon {
+    margin: 0 !important;
+}
+
+.ui.vertical.stripe {
+    padding: 8em 0em !important;
+}
+.ui.vertical.stripe:nth-child(3) {
+    padding: 4em 0em !important;
+}
+.ui.vertical.stripe:nth-child(4) {
+    padding: 4em 0em !important;
+}
+.ui.vertical.stripe h3 {
+    font-size: 2em;
+}
+.ui.vertical.stripe .button + h3,
+.ui.vertical.stripe p + h3 {
+    margin-top: 3em;
+}
+.ui.vertical.stripe .floated.image {
+    clear: both;
+}
+.ui.vertical.stripe p {
+    font-size: 1.33em;
+}
+.ui.vertical.stripe .horizontal.divider {
+    margin: 3em 0em;
+}
+
+.masthead .logo.item img {
+    margin-right: 1em;
+}
+.masthead .ui.menu .ui.button {
+    margin-left: 0.5em;
+}
+.masthead h1.ui.header {
+    margin-top: 3em;
+    margin-bottom: 0em;
+    font-size: 4em;
+    font-weight: normal;
+}
+.masthead h2 {
+    font-size: 1.7em;
+    font-weight: normal;
+}
 .autocomplete-items {
     border: 1px solid #d4d4d4;
     border-bottom: none;
@@ -167,6 +300,12 @@ body {
     top: 100%;
     left: 0;
     right: 0;
+}
+.ui.vertical.segment:last-child {
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+}
+.ui.message {
+    text-align: left;
 }
 .autocomplete-items div {
     padding: 10px;

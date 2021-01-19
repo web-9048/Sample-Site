@@ -9,6 +9,7 @@ var express = require('express'),
 const Stripe = require('stripe');
 const Order = require('../models/order');
 const stripe = Stripe(process.env.STRIPE_KEY);
+const { body, validationResult } = require('express-validator');
 
 router.post('/checkout', middleware.isLoggedIn, async function (req, res) {
     console.log(req.body);

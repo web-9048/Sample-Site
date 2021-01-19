@@ -12,7 +12,9 @@ var expressSanitizer = require('express-sanitizer');
     (passportLocalMongoose = require('passport-local-mongoose')),
     (passport = require('passport')),
     (flash = require('connect-flash'));
-(Comment = require('./models/comments.js')), (User = require('./models/users.js'));
+(Comment = require('./models/comments.js')),
+    (User = require('./models/users.js')),
+    (mongoSanitize = require('express-mongo-sanitize'));
 
 var commentRouts = require('./routs/comments.js'),
     productRouts = require('./routs/products.js'),
@@ -41,7 +43,7 @@ app.use(express.static('public'));
 app.use(express.static('scripts'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(mongoSanitize());
 app.use(flash());
 
 app.use(

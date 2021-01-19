@@ -1,14 +1,14 @@
-body{
+body {
     background-color: black;
 }
-#landing-header{
+#landing-header {
     z-index: 1;
     position: relative;
     text-align: center;
     padding-top: 40vh;
     color: white;
 }
-.slideshow{
+.slideshow {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -19,7 +19,7 @@ body{
     padding: 0;
     margin: 0;
 }
-.slideshow li { 
+.slideshow li {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -30,42 +30,22 @@ body{
     background-repeat: no-repeat;
     opacity: 0;
     z-index: 0;
-    animation: imageAnimation 150s linear infinite; 
-  }
-  .slideshow li:nth-child(1) { 
-    background-image: url("https://images.unsplash.com/photo-1516040553818-957c96b20e8d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80") 
-  }
+    animation: imageAnimation 50s linear infinite;
+}
 
-  @keyframes imageAnimation { 
-    0% { 
-      opacity: 0; 
-      animation-timing-function: ease-in;
+@keyframes imageAnimation {
+    0% {
+        opacity: 0;
+        animation-timing-function: ease-in;
     }
     10% {
-      opacity: 0.5;
-      animation-timing-function: ease-in;
+        opacity: 0.5;
+        animation-timing-function: ease-in;
     }
     20% {
-      opacity: 1
+        opacity: 1;
     }
     30% {
-      opacity: 1
+        opacity: 0;
     }
-  }
-  .no-cssanimations .slideshow li {
-	opacity: 1;
-}
-div.ui.segment{
-  color: rgb(84, 200, 255);;
-  background-color: rgba(0,0,0,.87)
-}
-div.ui.secondary.segment{
-  color: rgb(84, 200, 255);;
-  background-color: rgba(0,0,0,.87)
-}
-#description{
-  display: none
-}
-.none{
-  display: "none"
 }

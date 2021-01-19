@@ -5,6 +5,7 @@ var express = require('express'),
     middleware = require('../middleware/middleware'),
     Products = require('../models/products'),
     middleware = require('../middleware/middleware');
+
 router.get(
     '/cart',
     middleware.isLoggedIn,
@@ -29,9 +30,8 @@ router.get(
             });
     },
 );
-
 router.post('/products/:id/add', middleware.isLoggedIn, function (req, res) {
-    User.findById(req.user.id, function (err, user) {
+    User.findById(req.user._id, function (err, user) {
         if (err) {
             req.flash('error', err.message);
             res.redirect('back');
@@ -48,7 +48,7 @@ router.post('/products/:id/add', middleware.isLoggedIn, function (req, res) {
                 res.redirect('/cart');
             } else {
                 user.products.forEach(function (p) {
-                    if (p.id.equals(product._id)) {
+                    if (product._id.equals(p.id)) {
                         user.products[user.products.indexOf(p)].quantity += 1;
                         user.save();
                     } else {

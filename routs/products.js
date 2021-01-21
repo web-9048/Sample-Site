@@ -68,6 +68,7 @@ router.post('/products/new', middleware.isLoggedIn, middleware.isAdmin, upload.s
     var title = req.body.title;
 
     var body = req.body.body;
+
     cloudinary.uploader.upload(req.file.path, function (result) {
         var image = result.secure_url;
 

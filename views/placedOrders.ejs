@@ -30,15 +30,27 @@
                             <div class="ui items">
                                 <div class="ui header">
                                     Set The Estimated Arrival Date: <%if(Date.parse(order.arrivalTime)){%>
+                                    <div class="ui action input">
+                                        <input
+                                            type="date"
+                                            name="<%=order._id%>"
+                                            id="inpu"
+                                            value="<%=new Date(order.arrivalTime).toISOString().substring(0, 10)%>"
+                                        />
+                                        <button class="ui button" id="<%=order._id%>">Submit</button>
+                                    </div>
 
-                                    <input
-                                        type="date"
-                                        id="inpu"
-                                        name="<%=order._id%>"
-                                        value="<%=new Date(order.arrivalTime).toISOString().substring(0, 10)%>"
-                                    />
                                     <%}else{%>
-                                    <input type="date" id="inpu" value="<%=order.arrivalTime%>" name="<%=order._id%>" />
+                                    <div class="ui action input">
+                                        <input
+                                            type="date"
+                                            id="inpu"
+                                            value="<%=order.arrivalTime%>"
+                                            name="<%=order._id%>"
+                                        />
+
+                                        <button class="ui button" id="<%=order._id%>">Submit</button>
+                                    </div>
 
                                     <%}%>
                                 </div>
@@ -105,7 +117,10 @@
 
 <script>
     document.querySelectorAll('#inpu').forEach(function (inp) {
-        inp.onblur = function () {
+        let but = document.getElementById(inp.name);
+        console.log(but);
+        but.onclick = function () {
+            console.log('assa');
             if (inp.value !== '') {
                 var settings = {
                     url: '/placed_orders/' + inp.name + '/update',
@@ -121,6 +136,8 @@
                 $.ajax(settings).done(function (response) {
                     console.log(response);
                 });
+            } else {
+                alert('Please Enter a correct date before submitting');
             }
         };
     });

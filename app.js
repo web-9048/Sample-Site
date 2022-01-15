@@ -27,7 +27,8 @@ var commentRouts = require('./routs/comments.js'),
 //   { useNewUrlParser: true, useUnifiedTopology: true }
 // );
 // mongoose.connect('mongodb://localhost/online_shopping');
-mongoose.connect(process.env.DB_URL);
+
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 // const MongoClient = require('mongodb').MongoClient;
 // const uri = 'mongodb+srv://mats2:Scout2005@cluster0.jsefa.mongodb.net/online_app?retryWrites=true&w=majority';
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });

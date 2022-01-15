@@ -22,22 +22,7 @@ var commentRouts = require('./routs/comments.js'),
     userRouts = require('./routs/users.js'),
     orderRouts = require('./routs/order');
 
-// mongoose.connect(
-//   "mongodb://uigh05hqkcltukk32zbj:kKOkWDw9efrKXJdeA9w4@bhpygth5x3lvaj4-mongodb.services.clever-cloud.com:27017/bhpygth5x3lvaj4",
-//   { useNewUrlParser: true, useUnifiedTopology: true }
-// );
-// mongoose.connect('mongodb://localhost/online_shopping');
-
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-// const MongoClient = require('mongodb').MongoClient;
-// const uri = 'mongodb+srv://mats2:Scout2005@cluster0.jsefa.mongodb.net/online_app?retryWrites=true&w=majority';
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// client.connect((err) => {
-//     // const collection = client.db('test').collection('devices');
-//     // perform actions on the collection object
-//     console.log(err);
-//     client.close();
-// });
 
 app.use(methodOverride('_method'));
 app.use(express.static('public'));
